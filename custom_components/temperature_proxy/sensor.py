@@ -9,6 +9,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .base import SourceTrackingEntity
 from .const import UNIQUE_ID_VALUE_SENSOR
+from .helpers import resolve_source_display_name
 
 DEFAULT_NAME = "Temperature"
 
@@ -22,9 +23,10 @@ async def async_setup_entry(
 class TemperatureProxyValueSensor(SourceTrackingEntity, SensorEntity):
     """Mirrors the numeric state of the currently selected temperature sensor.
 
-    Its own display name follows the selected source's friendly name (or its
-    entity_id without the "sensor." prefix if it has none), so there is no
-    need for a separate entity just to show that at a glance.
+    Its own display name follows the selected source, preferring a name the
+    user personalized over an auto-composed device+entity friendly_name (see
+    helpers.resolve_source_display_name), so there is no need for a separate
+    entity just to show that at a glance.
     """
 
     _attr_has_entity_name = True
@@ -62,8 +64,4 @@ class TemperatureProxyValueSensor(SourceTrackingEntity, SensorEntity):
     def _resolve_name(self, source_state: State | None) -> str:
         if self._source_entity_id is None:
             return DEFAULT_NAME
-        if source_state is not None:
-            friendly_name = source_state.attributes.get("friendly_name")
-            if friendly_name:
-                return friendly_name
-        return self._source_entity_id.removeprefix("sensor.")
+        return resolve_source_display_name(self.hass, self._source_entity_id, source_state)
