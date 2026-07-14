@@ -78,3 +78,7 @@ async def select_source(hass: HomeAssistant, select_entity_id: str, source_entit
         {"entity_id": select_entity_id, "option": source_entity_id},
         blocking=True,
     )
+    # blocking=True only waits for the service handler coroutine itself;
+    # the sensor/text entities react to the resulting state_changed event
+    # via listeners that are not guaranteed to have finished executing yet.
+    await hass.async_block_till_done()

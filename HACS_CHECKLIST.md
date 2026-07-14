@@ -10,9 +10,11 @@ for submitting this repo to `hacs/default`.
 - [x] Repository is installable as a HACS custom repository already
 - [x] Repository is not archived
 - [x] `hacs.json` exists with at least a `name` field
-- [x] At least one GitHub **Release** exists (not just a tag) — `v1.0.0`
-- [ ] `HACS Action` (`.github/workflows/hacs.yml`) passes with zero errors/ignores — added, needs a green run on GitHub before submitting
-- [ ] `Hassfest` (`.github/workflows/hassfest.yml`) passes — added, needs a green run on GitHub before submitting
+- [x] At least one GitHub **Release** exists (not just a tag) — `v1.0.1`
+- [x] `Hassfest` (`.github/workflows/hassfest.yml`) passes on GitHub
+- [ ] Repository has a **license** (currently missing — flagged by a manual `HACS Action` run)
+- [ ] Repository has **topics** set (currently missing)
+- [ ] `HACS Action` (`.github/workflows/hacs.yml`) passes with zero errors — currently manual-only (`workflow_dispatch`) since it fails on the license/topics/brand items above; re-enable push/PR triggers once those are fixed
 - [ ] PR to `hacs/default` opened from a personal (non-org) account, on a branch off `master`, with the entry inserted alphabetically
 
 ## Integration-specific requirements
@@ -24,6 +26,7 @@ for submitting this repo to `hacs/default`.
 
 ## Manual steps still needed (not automatable from here)
 
-1. Supply an `icon.png` (and ideally `logo.png`) brand image and commit it under `brand/`.
-2. Push to `main`, confirm both workflows (`HACS Validation`, `Hassfest Validation`) show green on GitHub.
-3. Fork [`hacs/default`](https://github.com/hacs/default), add `Yoldark34/temperature_proxy` to the `integration` list in alphabetical order, and open a PR from your fork (not an org account).
+1. Add a `LICENSE` file and set repository topics on GitHub (e.g. `home-assistant`, `hacs-integration`).
+2. Supply an `icon.png` (and ideally `logo.png`) brand image and commit it under `brand/`.
+3. Re-enable `push`/`pull_request` triggers on `.github/workflows/hacs.yml` and confirm it's green (currently `workflow_dispatch`-only).
+4. Fork [`hacs/default`](https://github.com/hacs/default), add `Yoldark34/temperature_proxy` to the `integration` list in alphabetical order, and open a PR from your fork (not an org account).
