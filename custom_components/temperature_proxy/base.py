@@ -34,8 +34,16 @@ class SourceTrackingEntity(Entity):
         self._unsub_select = async_track_state_change_event(
             self.hass, [self._select_entity_id], self._handle_select_changed
         )
-        self.async_on_remove(self._unsub_select)
         self._track_source(self.hass.states.get(self._select_entity_id))
+
+    async def async_will_remove_from_hass(self) -> None:
+        if self._unsub_select is not None:
+            self._unsub_select()
+            self._unsub_select = None
+        if self._unsub_source is not None:
+            self._unsub_source()
+            self._unsub_source = None
+        await super().async_will_remove_from_hass()
 
     @callback
     def _handle_select_changed(self, event: Event[EventStateChangedData]) -> None:
@@ -43,6 +51,9 @@ class SourceTrackingEntity(Entity):
 
     @callback
     def _track_source(self, select_state: State | None) -> None:
+        # _unsub_source is reassigned every time the selection changes, so it
+        # is unsubscribed here (and in async_will_remove_from_hass) rather
+        # than via async_on_remove, which would leak a stale callback per change.
         if self._unsub_source is not None:
             self._unsub_source()
             self._unsub_source = None
@@ -62,7 +73,6 @@ class SourceTrackingEntity(Entity):
             self._unsub_source = async_track_state_change_event(
                 self.hass, [self._source_entity_id], self._handle_source_changed
             )
-            self.async_on_remove(self._unsub_source)
 
         source_state = (
             self.hass.states.get(self._source_entity_id)
