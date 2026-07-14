@@ -5,12 +5,25 @@ A Home Assistant integration that creates a "pointer" device: pick any
 proxy mirrors its value under a stable entity_id that never changes even if
 you swap the underlying sensor.
 
-## Install via HACS
+## Installation
 
-1. HACS → Integrations → ⋮ → Custom repositories → add this repo's URL, category "Integration".
-2. Install "Temperature Proxy", restart Home Assistant.
-3. Settings → Devices & Services → Add Integration → search **Temperature Proxy**.
-4. Name the device (you can add as many proxies as you like).
+### Method 1: HACS
+
+One-click installation from HACS:
+
+[![Open your Home Assistant instance and open the Temperature Proxy integration inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=Yoldark34&repository=temperature_proxy&category=integration)
+
+Or, HACS → Integrations → ⋮ → Custom repositories → add `https://github.com/Yoldark34/temperature_proxy`, category **Integration** → Install → restart Home Assistant.
+
+### Method 2: Manual install
+
+Copy `custom_components/temperature_proxy` into your Home Assistant `custom_components` folder and restart.
+
+## Configuration
+
+[![Open your Home Assistant instance and start setting up a new Temperature Proxy integration instance.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=temperature_proxy)
+
+Or, Settings → Devices & Services → Add Integration → search **Temperature Proxy** → name the device. You can add as many proxies as you like.
 
 ## What you get per device
 
