@@ -16,7 +16,7 @@ def device_info(entry: ConfigEntry) -> DeviceInfo:
     return DeviceInfo(
         identifiers={(DOMAIN, entry.entry_id)},
         name=entry.title,
-        manufacturer="Temperature Proxy",
+        manufacturer="Yoldark34",
         model="Temperature Proxy",
         entry_type=DeviceEntryType.SERVICE,
     )
