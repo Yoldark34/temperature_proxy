@@ -1,0 +1,36 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Add Temperature Proxy",
+        "description": "Create a new temperature proxy device. You'll be able to pick which temperature sensor it mirrors from the device's Source Sensor selector.",
+        "data": {
+          "name": "Name"
+        }
+      }
+    },
+    "error": {
+      "name_required": "Please enter a name."
+    }
+  },
+  "entity": {
+    "select": {
+      "source_select": {
+        "name": "Source Sensor"
+      }
+    },
+    "sensor": {
+      "value": {
+        "name": "Temperature"
+      },
+      "source_name": {
+        "name": "Source Name"
+      }
+    },
+    "text": {
+      "source_storage": {
+        "name": "Source Storage"
+      }
+    }
+  }
+}
