@@ -1,4 +1,4 @@
-"""Sensor entities exposing the proxied temperature value and source name."""
+"""Sensor entity exposing the proxied temperature value."""
 from __future__ import annotations
 
 from homeassistant.components.sensor import SensorDeviceClass, SensorEntity, SensorStateClass
@@ -8,25 +8,26 @@ from homeassistant.core import HomeAssistant, State
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .base import SourceTrackingEntity
-from .const import UNIQUE_ID_NAME_SENSOR, UNIQUE_ID_VALUE_SENSOR
+from .const import UNIQUE_ID_VALUE_SENSOR
+
+DEFAULT_NAME = "Temperature"
 
 
 async def async_setup_entry(
     hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback
 ) -> None:
-    async_add_entities(
-        [
-            TemperatureProxyValueSensor(entry),
-            TemperatureProxySourceNameSensor(entry),
-        ]
-    )
+    async_add_entities([TemperatureProxyValueSensor(entry)])
 
 
 class TemperatureProxyValueSensor(SourceTrackingEntity, SensorEntity):
-    """Mirrors the numeric state of the currently selected temperature sensor."""
+    """Mirrors the numeric state of the currently selected temperature sensor.
+
+    Its own display name follows the selected source's friendly name (or its
+    entity_id without the "sensor." prefix if it has none), so there is no
+    need for a separate entity just to show that at a glance.
+    """
 
     _attr_has_entity_name = True
-    _attr_name = "Temperature"
     _attr_device_class = SensorDeviceClass.TEMPERATURE
     _attr_state_class = SensorStateClass.MEASUREMENT
 
@@ -37,9 +38,11 @@ class TemperatureProxyValueSensor(SourceTrackingEntity, SensorEntity):
         self._attr_native_value = None
         self._attr_available = False
         self._attr_extra_state_attributes = {"tracked_sensor": None}
+        self._attr_name = DEFAULT_NAME
 
     def _async_source_updated(self, source_state: State | None) -> None:
         self._attr_extra_state_attributes = {"tracked_sensor": self._source_entity_id}
+        self._attr_name = self._resolve_name(source_state)
 
         if source_state is None or source_state.state in (
             "unknown",
@@ -56,27 +59,11 @@ class TemperatureProxyValueSensor(SourceTrackingEntity, SensorEntity):
             "unit_of_measurement", UnitOfTemperature.CELSIUS
         )
 
-
-class TemperatureProxySourceNameSensor(SourceTrackingEntity, SensorEntity):
-    """Mirrors the friendly name of the currently selected temperature sensor."""
-
-    _attr_has_entity_name = True
-    _attr_name = "Source Name"
-    _attr_icon = "mdi:tag-text-outline"
-
-    def __init__(self, entry: ConfigEntry) -> None:
-        super().__init__(entry)
-        self._attr_unique_id = f"{entry.entry_id}_{UNIQUE_ID_NAME_SENSOR}"
-        self._attr_native_value = None
-        self._attr_extra_state_attributes = {"tracked_sensor": None}
-
-    def _async_source_updated(self, source_state: State | None) -> None:
-        self._attr_extra_state_attributes = {"tracked_sensor": self._source_entity_id}
-
-        if source_state is None:
-            self._attr_native_value = None
-            return
-
-        self._attr_native_value = source_state.attributes.get(
-            "friendly_name", self._source_entity_id
-        )
+    def _resolve_name(self, source_state: State | None) -> str:
+        if self._source_entity_id is None:
+            return DEFAULT_NAME
+        if source_state is not None:
+            friendly_name = source_state.attributes.get("friendly_name")
+            if friendly_name:
+                return friendly_name
+        return self._source_entity_id.removeprefix("sensor.")

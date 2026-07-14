@@ -9,8 +9,8 @@ from custom_components.temperature_proxy.const import DOMAIN
 from .common import setup_proxy_entry
 
 
-async def test_setup_creates_one_device_with_three_entities(hass: HomeAssistant) -> None:
-    """Setting up an entry creates a single device holding all 3 entities."""
+async def test_setup_creates_one_device_with_two_entities(hass: HomeAssistant) -> None:
+    """Setting up an entry creates a single device holding both entities."""
     entry = await setup_proxy_entry(hass, "Fridge Proxy")
 
     dev_reg = dr.async_get(hass)
@@ -25,7 +25,6 @@ async def test_setup_creates_one_device_with_three_entities(hass: HomeAssistant)
     assert unique_id_suffixes == {
         "source_select",
         "value",
-        "source_name",
     }
     assert {e.entity_id.split(".")[0] for e in entities} == {"select", "sensor"}
     assert all(e.device_id == device.id for e in entities)

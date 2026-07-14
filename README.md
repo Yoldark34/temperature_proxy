@@ -28,7 +28,6 @@ Or, Settings → Devices & Services → Add Integration → search **Temperature
 ## What you get per device
 
 - **Source Sensor** (`select.*`) — pick which temperature sensor to mirror. Options refresh automatically as sensors appear/disappear, and the selection survives restarts on its own (via Home Assistant's built-in entity restore).
-- **Temperature** (`sensor.*`) — the mirrored numeric value, `device_class: temperature`.
-- **Source Name** (`sensor.*`) — the friendly name of whatever is currently selected.
+- **Temperature** (`sensor.*`) — the mirrored numeric value, `device_class: temperature`. Its own display name follows the selected source (its friendly name, or its entity_id without the `sensor.` prefix if it has none), so you can tell what it's mirroring at a glance without a separate entity.
 
 No YAML, no helpers, no automations to maintain by hand.

@@ -26,9 +26,6 @@
     "sensor": {
       "value": {
         "name": "Temperature"
-      },
-      "source_name": {
-        "name": "Source Name"
       }
     }
   }
