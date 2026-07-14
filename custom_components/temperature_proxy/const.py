@@ -3,6 +3,8 @@ from homeassistant.const import Platform
 
 DOMAIN = "temperature_proxy"
 
+CONF_SOURCE_SENSOR = "source_sensor"
+
 PLATFORMS = [Platform.SELECT, Platform.SENSOR]
 
 UNIQUE_ID_SELECT = "source_select"

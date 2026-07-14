@@ -61,9 +61,11 @@ async def register_mock_entity(hass: HomeAssistant, entity: Entity, domain: str)
     await hass.async_block_till_done()
 
 
-async def setup_proxy_entry(hass: HomeAssistant, title: str = "Test Proxy") -> MockConfigEntry:
+async def setup_proxy_entry(
+    hass: HomeAssistant, title: str = "Test Proxy", data: dict | None = None
+) -> MockConfigEntry:
     """Create and set up a Temperature Proxy config entry."""
-    entry = MockConfigEntry(domain=DOMAIN, title=title, data={})
+    entry = MockConfigEntry(domain=DOMAIN, title=title, data=data or {})
     entry.add_to_hass(hass)
     await hass.config_entries.async_setup(entry.entry_id)
     await hass.async_block_till_done()

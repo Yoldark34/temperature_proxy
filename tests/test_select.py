@@ -3,6 +3,7 @@ from homeassistant.core import HomeAssistant, State
 from pytest_homeassistant_custom_component.common import mock_restore_cache
 
 from custom_components.temperature_proxy.const import (
+    CONF_SOURCE_SENSOR,
     UNIQUE_ID_SELECT,
     UNIQUE_ID_VALUE_SENSOR,
 )
@@ -104,6 +105,44 @@ async def test_selection_restored_after_restart(hass: HomeAssistant) -> None:
     await hass.async_block_till_done()
 
     assert hass.states.get(select_entity_id).state == "sensor.kitchen"
+
+
+async def test_initial_selection_comes_from_config_flow_choice(hass: HomeAssistant) -> None:
+    """A brand new proxy starts pointed at the sensor chosen during setup."""
+    await register_mock_entity(
+        hass, MockTemperatureSensor(hass, "kitchen", "Kitchen"), "sensor"
+    )
+    entry = await setup_proxy_entry(
+        hass, data={CONF_SOURCE_SENSOR: "sensor.kitchen"}
+    )
+    select_entity_id = async_get_entity_id(hass, "select", entry.entry_id, UNIQUE_ID_SELECT)
+
+    assert hass.states.get(select_entity_id).state == "sensor.kitchen"
+
+
+async def test_config_flow_choice_ignored_once_a_real_selection_exists(
+    hass: HomeAssistant,
+) -> None:
+    """The config-flow default only applies on first setup, not on every restart."""
+    await register_mock_entity(
+        hass, MockTemperatureSensor(hass, "kitchen", "Kitchen"), "sensor"
+    )
+    await register_mock_entity(
+        hass, MockTemperatureSensor(hass, "garden", "Garden"), "sensor"
+    )
+    entry = await setup_proxy_entry(
+        hass, data={CONF_SOURCE_SENSOR: "sensor.kitchen"}
+    )
+    select_entity_id = async_get_entity_id(hass, "select", entry.entry_id, UNIQUE_ID_SELECT)
+    await select_source(hass, select_entity_id, "sensor.garden")
+
+    await hass.config_entries.async_unload(entry.entry_id)
+    await hass.async_block_till_done()
+    mock_restore_cache(hass, [State(select_entity_id, "sensor.garden")])
+    await hass.config_entries.async_setup(entry.entry_id)
+    await hass.async_block_till_done()
+
+    assert hass.states.get(select_entity_id).state == "sensor.garden"
 
 
 async def test_restore_ignored_if_sensor_no_longer_exists(hass: HomeAssistant) -> None:

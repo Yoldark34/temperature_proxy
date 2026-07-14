@@ -23,7 +23,7 @@ Copy `custom_components/temperature_proxy` into your Home Assistant `custom_comp
 
 [![Open your Home Assistant instance and start setting up a new Temperature Proxy integration instance.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=temperature_proxy)
 
-Or, Settings → Devices & Services → Add Integration → search **Temperature Proxy** → name the device. You can add as many proxies as you like.
+Or, Settings → Devices & Services → Add Integration → search **Temperature Proxy** → name the device and pick the temperature sensor it should start out pointing to. You can add as many proxies as you like, and repoint any of them later from its Source Sensor selector.
 
 ## What you get per device
 

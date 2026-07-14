@@ -3,9 +3,13 @@
     "step": {
       "user": {
         "title": "Add Temperature Proxy",
-        "description": "Create a new temperature proxy device. You'll be able to pick which temperature sensor it mirrors from the device's Source Sensor selector.",
+        "description": "Create a new temperature proxy device.",
         "data": {
-          "name": "Name"
+          "name": "Name",
+          "source_sensor": "Source sensor"
+        },
+        "data_description": {
+          "source_sensor": "The temperature sensor this proxy should mirror. You can repoint it later from the device's Source Sensor selector."
         }
       }
     },

@@ -12,7 +12,7 @@ from homeassistant.helpers.event import (
 )
 from homeassistant.helpers.restore_state import RestoreEntity
 
-from .const import UNIQUE_ID_SELECT
+from .const import CONF_SOURCE_SENSOR, UNIQUE_ID_SELECT
 from .helpers import device_info, get_temperature_sensor_entities
 
 
@@ -49,6 +49,11 @@ class TemperatureProxySourceSelect(SelectEntity, RestoreEntity):
             "",
         ):
             self._pending_restore = last_state.state
+        else:
+            # No prior restored state means this entity has never existed
+            # before (fresh setup, or its registry entry was deleted) -
+            # fall back to the sensor chosen in the config flow.
+            self._pending_restore = self._entry.data.get(CONF_SOURCE_SENSOR)
 
         self._refresh_options()
         self._try_restore()

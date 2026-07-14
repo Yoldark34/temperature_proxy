@@ -5,8 +5,9 @@ import voluptuous as vol
 
 from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
 from homeassistant.const import CONF_NAME
+from homeassistant.helpers import selector
 
-from .const import DOMAIN
+from .const import CONF_SOURCE_SENSOR, DEVICE_CLASS_TEMPERATURE, DOMAIN
 
 DEFAULT_NAME = "Temperature Proxy"
 
@@ -26,10 +27,20 @@ class TemperatureProxyConfigFlow(ConfigFlow, domain=DOMAIN):
             if not name:
                 errors["base"] = "name_required"
             else:
-                return self.async_create_entry(title=name, data={})
+                return self.async_create_entry(
+                    title=name,
+                    data={CONF_SOURCE_SENSOR: user_input[CONF_SOURCE_SENSOR]},
+                )
 
         schema = vol.Schema(
-            {vol.Required(CONF_NAME, default=DEFAULT_NAME): str}
+            {
+                vol.Required(CONF_NAME, default=DEFAULT_NAME): str,
+                vol.Required(CONF_SOURCE_SENSOR): selector.EntitySelector(
+                    selector.EntitySelectorConfig(
+                        domain="sensor", device_class=DEVICE_CLASS_TEMPERATURE
+                    )
+                ),
+            }
         )
         return self.async_show_form(
             step_id="user", data_schema=schema, errors=errors
