@@ -11,7 +11,7 @@ from .const import PLATFORMS
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Temperature Proxy from a config entry.
 
-    The select entity is set up first and awaited on its own: sensor/text
+    The select entity is set up first and awaited on its own: the sensor
     entities look it up by unique_id as soon as they're added, and
     async_forward_entry_setups sets platforms up concurrently, so without
     this ordering they can race and find it missing.

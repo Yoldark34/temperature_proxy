@@ -26,11 +26,6 @@
       "source_name": {
         "name": "Source Name"
       }
-    },
-    "text": {
-      "source_storage": {
-        "name": "Source Storage"
-      }
     }
   }
 }

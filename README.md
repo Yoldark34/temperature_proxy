@@ -27,13 +27,8 @@ Or, Settings → Devices & Services → Add Integration → search **Temperature
 
 ## What you get per device
 
-- **Source Sensor** (`select.*`) — pick which temperature sensor to mirror. Options refresh automatically as sensors appear/disappear, and the selection survives restarts.
+- **Source Sensor** (`select.*`) — pick which temperature sensor to mirror. Options refresh automatically as sensors appear/disappear, and the selection survives restarts on its own (via Home Assistant's built-in entity restore).
 - **Temperature** (`sensor.*`) — the mirrored numeric value, `device_class: temperature`.
 - **Source Name** (`sensor.*`) — the friendly name of whatever is currently selected.
-- **Source Storage** (`text.*`, hidden/diagnostic) — a mirror of the current selection, kept for visibility/automations. Not required for restart persistence — the selector restores itself.
 
 No YAML, no helpers, no automations to maintain by hand.
-
-## Manual install
-
-Copy `custom_components/temperature_proxy` into your Home Assistant `custom_components` folder and restart.
